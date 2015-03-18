@@ -68,33 +68,33 @@ public class FilenameImportPlugin extends AbstractStepPlugin implements IStepPlu
         Collections.sort(filenames);
         for (String filename : filenames) {
             if (filename.endsWith("pdf")) {
-                // move to ocr folder
-                try {
-                    String destination = process.getPdfDirectory();
-                    File destinationFolder = new File(destination);
-                    if (!destinationFolder.exists()) {
-                        destinationFolder.mkdirs();
-                    }
-                    FileUtils.copyFileToDirectory(new File(folder, filename), destinationFolder);
-                } catch (SwapException | DAOException | IOException | InterruptedException e) {
-                    logger.error(e);
-                    Helper.setFehlerMeldung(e);
-                    return false;
-                }
+//                // move to ocr folder
+//                try {
+//                    String destination = process.getPdfDirectory();
+//                    File destinationFolder = new File(destination);
+//                    if (!destinationFolder.exists()) {
+//                        destinationFolder.mkdirs();
+//                    }
+//                    FileUtils.copyFileToDirectory(new File(folder, filename), destinationFolder);
+//                } catch (SwapException | DAOException | IOException | InterruptedException e) {
+//                    logger.error(e);
+//                    Helper.setFehlerMeldung(e);
+//                    return false;
+//                }
             } else if (filename.endsWith("xml")) {
                 // move to alto folder
-                try {
-                    String destination = process.getAltoDirectory();
-                    File destinationFolder = new File(destination);
-                    if (!destinationFolder.exists()) {
-                        destinationFolder.mkdirs();
-                    }
-                    FileUtils.copyFileToDirectory(new File(folder, filename), destinationFolder);
-                } catch (SwapException | DAOException | IOException | InterruptedException e) {
-                    logger.error(e);
-                    Helper.setFehlerMeldung(e);
-                    return false;
-                }
+//                try {
+//                    String destination = process.getAltoDirectory();
+//                    File destinationFolder = new File(destination);
+//                    if (!destinationFolder.exists()) {
+//                        destinationFolder.mkdirs();
+//                    }
+//                    FileUtils.copyFileToDirectory(new File(folder, filename), destinationFolder);
+//                } catch (SwapException | DAOException | IOException | InterruptedException e) {
+//                    logger.error(e);
+//                    Helper.setFehlerMeldung(e);
+//                    return false;
+//                }
             } else if (filename.equals("Thumbs.db")) {
                 // delete
                 FileUtils.deleteQuietly(new File(folder, filename));
