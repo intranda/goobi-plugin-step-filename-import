@@ -95,10 +95,10 @@ public class FilenameImportPlugin extends AbstractStepPlugin implements IStepPlu
 //                    Helper.setFehlerMeldung(e);
 //                    return false;
 //                }
-            } else if (filename.equals("Thumbs.db")) {
-                // delete
-                FileUtils.deleteQuietly(new File(folder, filename));
-            } else {
+//            } else if (filename.equals("Thumbs.db")) {
+//                // delete
+//                FileUtils.deleteQuietly(new File(folder, filename));
+            } else if (filename.endsWith(".tif")){
                 // import as page
                 String[] parts = filename.replace(".tif", "").split("-");
                 //                String identifier = parts[0];
@@ -108,6 +108,9 @@ public class FilenameImportPlugin extends AbstractStepPlugin implements IStepPlu
 
                 Image img = new Image(logicalPageNo, physicalPageNo, docstructType);
                 imageList.add(img);
+            } else {
+                // löschen/verschieben
+                FileUtils.deleteQuietly(new File(folder, filename));
             }
         }
 

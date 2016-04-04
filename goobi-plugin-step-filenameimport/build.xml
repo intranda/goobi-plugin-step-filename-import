@@ -82,7 +82,7 @@
 
 	<target name="compile">
 		<echo>Using eclipse compiler</echo>
-		<javac destdir="${dir.build}" includeantruntime="false">
+		<javac destdir="${dir.build}" includeantruntime="false" target="7" encoding="UTF8" source="7" debug="true" debuglevel="lines,vars,source">
 			<classpath refid="classpath" />
 			<compilerarg value="-Xlint" />
 			<src path="src" />
