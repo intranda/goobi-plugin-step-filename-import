@@ -7,8 +7,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import net.xeoh.plugins.base.annotations.PluginImplementation;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFileFilter;
 import org.apache.log4j.Logger;
@@ -18,6 +16,10 @@ import org.goobi.production.plugin.interfaces.AbstractStepPlugin;
 import org.goobi.production.plugin.interfaces.IPlugin;
 import org.goobi.production.plugin.interfaces.IStepPlugin;
 
+import de.intranda.goobi.plugins.utils.Image;
+import de.sub.goobi.helper.Helper;
+import de.sub.goobi.helper.exceptions.SwapException;
+import net.xeoh.plugins.base.annotations.PluginImplementation;
 import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
 import ugh.dl.DocStructType;
@@ -32,10 +34,6 @@ import ugh.exceptions.ReadException;
 import ugh.exceptions.TypeNotAllowedAsChildException;
 import ugh.exceptions.TypeNotAllowedForParentException;
 import ugh.exceptions.WriteException;
-import de.intranda.goobi.plugins.utils.Image;
-import de.sub.goobi.helper.Helper;
-import de.sub.goobi.helper.exceptions.DAOException;
-import de.sub.goobi.helper.exceptions.SwapException;
 
 @PluginImplementation
 public class FilenameImportPlugin extends AbstractStepPlugin implements IStepPlugin, IPlugin {
@@ -43,8 +41,9 @@ public class FilenameImportPlugin extends AbstractStepPlugin implements IStepPlu
     private static final String PLUGIN_NAME = "FilenameImportPlugin";
     private static final Logger logger = Logger.getLogger(FilenameImportPlugin.class);
 
-    private List<Image> imageList = new ArrayList<Image>();
+    private List<Image> imageList = new ArrayList<>();
 
+    @Override
     public String getTitle() {
         return PLUGIN_NAME;
     }
@@ -57,7 +56,7 @@ public class FilenameImportPlugin extends AbstractStepPlugin implements IStepPlu
         String imageFolderName = "";
         try {
             imageFolderName = process.getImagesTifDirectory(false);
-        } catch (SwapException | DAOException | IOException | InterruptedException e) {
+        } catch (SwapException | IOException  e) {
             logger.error(e);
             return false;
         }
@@ -68,36 +67,36 @@ public class FilenameImportPlugin extends AbstractStepPlugin implements IStepPlu
         Collections.sort(filenames);
         for (String filename : filenames) {
             if (filename.endsWith("pdf")) {
-//                // move to ocr folder
-//                try {
-//                    String destination = process.getPdfDirectory();
-//                    File destinationFolder = new File(destination);
-//                    if (!destinationFolder.exists()) {
-//                        destinationFolder.mkdirs();
-//                    }
-//                    FileUtils.copyFileToDirectory(new File(folder, filename), destinationFolder);
-//                } catch (SwapException | DAOException | IOException | InterruptedException e) {
-//                    logger.error(e);
-//                    Helper.setFehlerMeldung(e);
-//                    return false;
-//                }
+                //                // move to ocr folder
+                //                try {
+                //                    String destination = process.getPdfDirectory();
+                //                    File destinationFolder = new File(destination);
+                //                    if (!destinationFolder.exists()) {
+                //                        destinationFolder.mkdirs();
+                //                    }
+                //                    FileUtils.copyFileToDirectory(new File(folder, filename), destinationFolder);
+                //                } catch (SwapException | DAOException | IOException | InterruptedException e) {
+                //                    logger.error(e);
+                //                    Helper.setFehlerMeldung(e);
+                //                    return false;
+                //                }
             } else if (filename.endsWith("xml")) {
                 // move to alto folder
-//                try {
-//                    String destination = process.getAltoDirectory();
-//                    File destinationFolder = new File(destination);
-//                    if (!destinationFolder.exists()) {
-//                        destinationFolder.mkdirs();
-//                    }
-//                    FileUtils.copyFileToDirectory(new File(folder, filename), destinationFolder);
-//                } catch (SwapException | DAOException | IOException | InterruptedException e) {
-//                    logger.error(e);
-//                    Helper.setFehlerMeldung(e);
-//                    return false;
-//                }
-//            } else if (filename.equals("Thumbs.db")) {
-//                // delete
-//                FileUtils.deleteQuietly(new File(folder, filename));
+                //                try {
+                //                    String destination = process.getAltoDirectory();
+                //                    File destinationFolder = new File(destination);
+                //                    if (!destinationFolder.exists()) {
+                //                        destinationFolder.mkdirs();
+                //                    }
+                //                    FileUtils.copyFileToDirectory(new File(folder, filename), destinationFolder);
+                //                } catch (SwapException | DAOException | IOException | InterruptedException e) {
+                //                    logger.error(e);
+                //                    Helper.setFehlerMeldung(e);
+                //                    return false;
+                //                }
+                //            } else if (filename.equals("Thumbs.db")) {
+                //                // delete
+                //                FileUtils.deleteQuietly(new File(folder, filename));
             } else if (filename.endsWith(".tif")){
                 // import as page
                 String[] parts = filename.replace(".tif", "").split("-");
@@ -165,7 +164,7 @@ public class FilenameImportPlugin extends AbstractStepPlugin implements IStepPlu
 
             process.writeMetadataFile(fileformat);
             return true;
-        } catch (ReadException | PreferencesException | SwapException | DAOException | WriteException | IOException | InterruptedException e1) {
+        } catch (ReadException | PreferencesException | SwapException | WriteException | IOException e1) {
             logger.error(e1);
             Helper.setFehlerMeldung(e1);
         } catch (TypeNotAllowedForParentException | MetadataTypeNotAllowedException | TypeNotAllowedAsChildException e) {
@@ -181,7 +180,7 @@ public class FilenameImportPlugin extends AbstractStepPlugin implements IStepPlu
             for (DocStruct page : pages) {
                 digitalDocument.getFileSet().removeFile(page.getAllContentFiles().get(0));
 
-                List<Reference> refs = new ArrayList<Reference>(page.getAllFromReferences());
+                List<Reference> refs = new ArrayList<>(page.getAllFromReferences());
                 for (ugh.dl.Reference ref : refs) {
                     ref.getSource().removeReferenceTo(page);
                 }
